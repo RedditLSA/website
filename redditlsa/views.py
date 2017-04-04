@@ -180,6 +180,7 @@ def map_view(request):
         if method == '538':
             z = solve_538(A, y)
         else:
+            method = 'optimal'
             z = solve_optimal(A, y)
         z = z / np.sum(z)
         sim = score(A, z, y)

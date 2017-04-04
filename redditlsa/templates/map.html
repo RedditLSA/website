@@ -26,7 +26,7 @@
                         let outsubs = $("#outsubs").select2("val");
                         let ignore = insubs.concat(outsubs);
                         return {
-                            q: params.term,
+                            query: params.term,
                             ignore: ignore
                         };
                     },

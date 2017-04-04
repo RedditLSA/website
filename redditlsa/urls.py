@@ -10,7 +10,7 @@ from redditlsa import views
 admin.autodiscover()
 
 query_string = '?insubs=Feminism&insubs=politics&insubs=altright&insubs=antivax&outsubs=hillaryclinton&outsubs' \
-               '=SandersForPresident&outsubs=The_Donald&outsubs=GaryJohnson&outsubs=jillstein&method=optimal '
+               '=SandersForPresident&outsubs=The_Donald&outsubs=GaryJohnson&outsubs=jillstein&method=optimal'
 urlpatterns = [
     url(r'^$', lambda request: redirect(reverse('map') + query_string), name='home'),
     url(r'^algebra/$', views.algebra_view, name='algebra'),
