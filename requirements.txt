@@ -1,0 +1,15 @@
+appdirs==1.4.3
+dj-config-url==0.1.1
+Django==1.10.6
+django-heroku-memcacheify==1.0.0
+django-pylibmc==0.6.1
+gunicorn==19.7.1
+numdifftools==0.9.20
+numpy==1.12.1
+packaging==16.8
+psycopg2==2.7.1
+pylibmc==1.5.2
+pyparsing==2.2.0
+scipy==0.19.0
+six==1.10.0
+whitenoise==3.3.0

@@ -1,0 +1,1 @@
+web: gunicorn redditlsa.wsgi --log-file -

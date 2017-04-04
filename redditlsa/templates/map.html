@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% load apptags %}
+{% block head %}
+    <style xmlns:xlink="http://www.w3.org/1999/xhtml">
+        .container {
+            padding-top: 1em;
+        }
+
+        .btn {
+            box-shadow: none !important;
+        }
+
+        .select2-search__field:not([placeholder='']) {
+            width: 100% !important;
+        }
+    </style>
+    <script>
+        $(function () {
+            const select2Params = {
+                ajax: {
+                    url: "{% url 'search' %}",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        let insubs = $("#insubs").select2("val");
+                        let outsubs = $("#outsubs").select2("val");
+                        let ignore = insubs.concat(outsubs);
+                        return {
+                            q: params.term,
+                            ignore: ignore
+                        };
+                    },
+                    processResults: function (data, params) {
+                        return {
+                            results: data.items
+                        };
+                    },
+                    cache: true
+                },
+                escapeMarkup: function (markup) {
+                    return markup;
+                },
+                minimumInputLength: 1,
+                maximumSelectionLength: 10,
+                width: '100%'
+            };
+            select2Params.placeholder = "Inner Subreddits";
+            $("#insubs").select2(select2Params);
+            select2Params.placeholder = "Outer Subreddits";
+            $("#outsubs").select2(select2Params);
+            $("#content").fadeIn();
+
+            $("body").keypress(function (e) {
+                if (e.which === 13) {
+                    $(this).submit();
+                    return false;
+                }
+            });
+        });
+    </script>
+{% endblock %}
+{% block content %}
+    <div id="content" style="display: none;">
+        <div class="">
+            <form class="">
+                <label class="mr-sm-2" for="insubs">Inner Subreddits</label>
+                <div class="form-group">
+                    <select id="insubs" name="insubs" multiple="multiple">
+                        {% for insub in insubs %}
+                            <option value="{{ insub }}" selected="selected">{{ insub }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <label for="outsubs">Outer Subreddits</label>
+                <div class="form-group">
+                    <select id="outsubs" name="outsubs" multiple="multiple">
+                        {% for outsub in outsubs %}
+                            <option value="{{ outsub }}" selected="selected">{{ outsub }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <label for="method">Method</label>
+                <div class="form-group">
+                    <div class="btn-group" data-toggle="buttons">
+                        <label class="btn btn-sm btn-outline-primary {% if method == 'optimal' %} active{% endif %} ">
+                            <input type="radio" name="method"
+                                   value="optimal" autocomplete="off"
+                                    {% if method == 'optimal' %} checked{% endif %}>Optimal
+                        </label>
+                        <label class="btn btn-sm btn-outline-primary {% if method == '538' %} active{% endif %} ">
+                            <input type="radio" name="method"
+                                   value="538" autocomplete="off"
+                                    {% if method == '538' %} checked{% endif %}>538
+                        </label>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-md btn-primary" id="submit">Map</button>
+            </form>
+        </div>
+        {% if inpoints %}
+            <hr>
+            <div class="container card card-outline-primary" style="background: black; margin-bottom: 10px;">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background-color: black" width="100%"
+                             height="100%" viewBox="-1.4 -1.2 2.8 2.4">
+                            <polygon points="{{ outpoints_str }}"
+                                     style="stroke:#0275d8;stroke-width:0.01;fill: black;"></polygon>
+                            {% for x, y, sub in outpoints %}
+                                <a xlink:href="https://www.reddit.com/r/{{ sub }}">
+                                    <text class="text" x="{{ x }}" y="{{ y }}" font-size="0.1" fill="white" text-anchor="middle">
+                                        r/{{ sub }}
+                                    </text>
+                                </a>
+                            {% endfor %}
+                            {% for x, y, fill in inpoints %}
+                                <circle cx="{{ x }}" cy="{{ y }}" style="fill:{{ fill }};" r="0.02"></circle>
+                            {% endfor %}
+                        </svg>
+                    </div>
+                    <div class="col-lg-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" viewBox="0 0 1.0 1.0">
+                            {% for y, sub, sim, fill in legend %}
+                                <a xlink:href="https://www.reddit.com/r/{{ sub }}">
+                                    <text class="text" x="0.5" y="{{ y }}" font-size="0.05" fill="{{ fill }}" text-anchor="middle">
+                                        r/{{ sub }} ({{ sim }})
+                                    </text>
+                                </a>
+                            {% endfor %}
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% load apptags %}
+{% if subsims %}
+    <table class="table table-bordered table-striped" style="table-layout: fixed">
+        <thead>
+        <tr>
+            <td>Subreddit</td>
+            <td>Similarity</td>
+        </tr>
+        </thead>
+        <tbody id="tbody">
+        {% for sub, sim in subsims %}
+            <tr>
+                <td>
+                    <a href="https://www.reddit.com/r/{{ sub }}">{{ sub }}</a>
+                </td>
+                {% if sim >= 0 %}
+                    <td>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: {{ sim }}%">
+                                {{ sim }}%
+                            </div>
+                        </div>
+                    </td>
+                {% else %}
+                    <td>
+                        <div class="progress">
+                            <div class="progress-bar bg-danger" role="progressbar"
+                                 style="width: {{ sim }}%">
+                                {{ sim|negate }}%
+                            </div>
+                        </div>
+                    </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No results</p>
+{% endif %}

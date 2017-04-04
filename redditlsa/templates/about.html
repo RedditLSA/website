@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+{% block head %}
+    <style>
+    .jumbotron {
+        margin-top: 10px;
+    }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="jumbotron">
+        <h1 class="display-3">Reddit Latent Semantic Analysis</h1>
+        <p class="lead">Analyzing subreddit similarities using latent semantic analysis</p>
+        <hr class="my-4">
+        <p>This website is essentially just a re-implementation of the ideas laid out in Trevor Martin's
+            <a href="https://fivethirtyeight.com/features/dissecting-trumps-most-rabid-online-following/">FiveThirtyEight
+                article</a>.
+            <br>
+            The favicon is <i>Vectorize</i> by Xinh Studio from the Noun Project.</p>
+    </div>
+    <h2>Maps</h2>
+    <p>
+        Maps are generated using two different methods, but both of them rely on the same core ideas. A really in-depth explanation and proof is presented in the <a href="{% static 'Subreddit_LSA.pdf' %}">technical spec</a>, and you should read it instead because most of this explanation is hands-wavy. Simply put, the algorithms both try to find a combination of the outer vectors which is most similar to the inner vector. The "538" solution is the one used by Trevor in his original post. It just finds the similarity between the inner vector and the outer vectors. The "optimal" solution is rigorously proven to be the optimal solution to the problem of creating the most similar vector to the inner vector, by just using the outer vectors. What this means in practice is that the "optimal" solution will always have as good or better of a score than the "538" solution, and it will generally go to the outer edges/corners. To demonstrate this, look at the default example; even though r/SandersForPresident has some similarity to r/CoonTown, you can produce a much more accurate representation of r/CoonTown by just using r/The_donald.
+    </p>
+{% endblock %}

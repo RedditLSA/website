@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% load apptags %}
+{% block head %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+    <style>
+        .container {
+            padding-top: 1em;
+        }
+
+        .btn {
+            box-shadow: none !important;
+        }
+
+        .select2-search__field:not([placeholder='']) {
+            width: 100% !important;
+        }
+    </style>
+    <script>
+        function error(message) {
+            $("#error-body").text(message);
+            $("#error").modal({
+                show: true,
+                keyboard: true,
+                backdrop: 'static'
+            });
+        }
+
+        $(function () {
+            const select2Params = {
+                ajax: {
+                    url: "{% url 'search' %}",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            query: params.term
+                        };
+                    },
+                    processResults: function (data, params) {
+                        return {
+                            results: data.items
+                        };
+                    },
+                    cache: true
+                },
+                escapeMarkup: function (markup) {
+                    return markup;
+                },
+                minimumInputLength: 1,
+                placeholder: 'Select a subreddit',
+                allowClear: true
+            };
+
+            {% for sub in subs %}
+                $("#sub{{ forloop.counter0 }}").select2(select2Params);
+            {% endfor %}
+
+            $("#content").fadeIn();
+
+            $("body").keypress(function (e) {
+                if (e.which === 13) {
+                    $("#search").submit();
+                    return false;
+                }
+            });
+
+            $("#refine").on("change paste keyup", function () {
+                let query = $(this).val();
+                $.get(`{% url 'refine' %}?query=${query}{% for sub in subs %}&sub{{ forloop.counter0 }}={{ sub }}{% endfor %}`, function (data) {
+                    if (data === "" || true) {
+                        error("The server no longer has your results saved, so it can't refine your search. Try refreshing the page.");
+                    } else {
+                        $("#table").html(data);
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}
+{% block content %}
+    <div id="content" style="display:none;">
+        <div class="">
+            <form class="" id="search">
+                <div class="form-group">
+                    <select id="sub0" name="sub0" title="sub0">
+                        <option value="{{ subs.0 }}">{{ subs.0 }}</option>
+                    </select>
+                </div>
+                {% for sub in subs|slice:"1:" %}
+                    <div class="form-group">
+                        <div class="btn-group" data-toggle="buttons">
+                            <label class="btn btn-outline-primary {% if ops|get_item:forloop.counter0 == 'plus' %} active{% endif %} ">
+                                <input type="radio" name="op{{ forloop.counter0 }}"
+                                       value="plus" autocomplete="off"
+                                        {% if ops|get_item:forloop.counter0 == 'plus' %} checked{% endif %}>Plus
+                            </label>
+                            <label class="btn btn-outline-primary {% if ops|get_item:forloop.counter0 == 'minus' %} active{% endif %}">
+                                <input type="radio" name="op{{ forloop.counter0 }}"
+                                       value="minus" autocomplete="off"
+                                        {% if ops|get_item:forloop.counter0 == 'minus' %} checked{% endif %}>Minus
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <select class="" id="sub{{ forloop.counter }}"
+                                name="sub{{ forloop.counter }}"
+                                title="sub{{ forloop.counter }}">
+                            <option value="{{ sub }}">{{ sub }}</option>
+                        </select>
+                    </div>
+                {% endfor %}
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <hr>
+        {% if subsims %}
+            <div class="">
+                <form>
+                    <div class="form-group">
+                        <label for="refine">
+                            <input name="query" class="form-control" id="refine" placeholder="Refine results">
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div id="table">
+                {% include 'table.html' with subsims=subsims %}
+            </div>
+        {% else %}
+            No subreddits selected for comparison
+        {% endif %}
+    </div>
+
+    <div class="modal hide" id="error" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Server Error</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="error-body"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

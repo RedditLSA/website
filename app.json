@@ -1,0 +1,8 @@
+{
+  "name": "redditlsa",
+  "description": "Reddit LSA",
+  "image": "heroku/python",
+  "addons": [
+    "heroku-postgresql"
+  ]
+}
