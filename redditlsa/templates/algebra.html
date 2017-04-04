@@ -68,7 +68,7 @@
             $("#refine").on("change paste keyup", function () {
                 let query = $(this).val();
                 $.get(`{% url 'refine' %}?query=${query}{% for sub in subs %}&sub{{ forloop.counter0 }}={{ sub }}{% endfor %}`, function (data) {
-                    if (data === "" || true) {
+                    if (data === "") {
                         error("The server no longer has your results saved, so it can't refine your search. Try refreshing the page.");
                     } else {
                         $("#table").html(data);

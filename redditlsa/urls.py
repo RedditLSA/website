@@ -3,13 +3,16 @@ from django.conf.urls import url
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.shortcuts import redirect
+from django.urls import reverse
 
 from redditlsa import views
 
 admin.autodiscover()
 
+query_string = '?insubs=Feminism&insubs=politics&insubs=altright&insubs=antivax&outsubs=hillaryclinton&outsubs' \
+               '=SandersForPresident&outsubs=The_Donald&outsubs=GaryJohnson&outsubs=jillstein&method=optimal '
 urlpatterns = [
-    url(r'^$', lambda request: redirect('algebra'), name='home'),
+    url(r'^$', lambda request: redirect(reverse('map') + query_string), name='home'),
     url(r'^algebra/$', views.algebra_view, name='algebra'),
     url(r'^maps/$', views.map_view, name='map'),
     url(r'^about/$', views.about_view, name='about'),
