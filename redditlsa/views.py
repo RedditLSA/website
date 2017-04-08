@@ -1,3 +1,5 @@
+import traceback
+
 import cPickle
 import os
 from itertools import islice
@@ -247,3 +249,10 @@ def search_view(request):
         if q.lower() in sub.lower():
             items.append({'text': sub, 'id': sub})
     return JsonResponse({'items': items})
+
+
+# Enable logging whenever a server error occurs
+def server_error(request):
+    print('Server Error. Printing stack trace.')
+    traceback.print_exc()
+    return render(request, '500.html')

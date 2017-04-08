@@ -11,6 +11,8 @@ admin.autodiscover()
 
 query_string = '?insubs=Feminism&insubs=politics&insubs=altright&insubs=antivax&outsubs=hillaryclinton&outsubs' \
                '=SandersForPresident&outsubs=The_Donald&outsubs=GaryJohnson&outsubs=jillstein&method=optimal'
+
+handler500 = 'redditlsa.views.server_error'
 urlpatterns = [
     url(r'^$', lambda request: redirect(reverse('map') + query_string), name='home'),
     url(r'^algebra/$', views.algebra_view, name='algebra'),
