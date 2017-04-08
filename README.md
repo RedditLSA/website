@@ -1,7 +1,17 @@
 # Reddit LSA Website
 This repository is the code for my [webpage](https://www.redditlsa.com) which is inspired by [this FiveThirtyEight article](https://fivethirtyeight.com/features/dissecting-trumps-most-rabid-online-following/). The benefit of this website over the original article is the interactive map view which uses a more sophisticated algorithm than the original article. 
 ## Architecture
-All of the data is in the `redditlsa/data` folder. This contains four objects
+You'll need to install all the data
+```bash
+#!/bin/sh
+mkdir -p "data"
+curl https://storage.googleapis.com/redditlsa/vectorized_data/index_to_sub.pkl > "data/index_to_sub.pkl"
+curl https://storage.googleapis.com/redditlsa/vectorized_data/sub_to_index.pkl > "data/sub_to_index.pkl"
+curl https://storage.googleapis.com/redditlsa/vectorized_data/subs_by_popularity.pkl > "data/subs_by_popularity.pkl"
+curl https://storage.googleapis.com/redditlsa/vectorized_data/X.npz > "data/X.npz"
+```
+
+All of the data is in the `data` folder. This contains four objects
 - `X.npz`: A sparse matrix with 40,875 rows and 1,800 columns representing the subreddit vectors
 - `subs_by_popularity.pkl`: A list of subreddits sorted in descending order of the number of authors
 - `sub_to_index.pkl`: A dictionary that converts subreddits to their corresponding row index in the X matrix
