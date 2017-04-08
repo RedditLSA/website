@@ -1,7 +1,6 @@
-import traceback
-
 import cPickle
 import os
+import traceback
 from itertools import islice
 
 import numpy as np
@@ -9,8 +8,7 @@ from django.conf import settings
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.template.loader import render_to_string
-from numpy.linalg import svd
-from scipy.optimize import nnls, differential_evolution, basinhopping
+from scipy.optimize import nnls, differential_evolution
 from scipy.sparse import load_npz
 from scipy.sparse.linalg import norm as sparse_norm
 
@@ -189,10 +187,10 @@ def map_view(request):
     for i, (sub, y) in enumerate(zip(insubs, invecs)):
         fill = 'hsl(' + str(dh * i * 360) + ', 100%, 50%)'
         if method == '538':
-            z = solve_nnls(A, y)
+            z = solve_538(A, y)
         else:
             method = 'nnls'
-            z = solve_global(A, y)
+            z = solve_nnls(A, y)
         z = z / np.sum(z)
         sim = score(A, z, y)
         sim = str(round(sim * 100, 1)) + '%'
