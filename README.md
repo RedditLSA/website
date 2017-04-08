@@ -1,4 +1,4 @@
-# Reddit LSA WebSite
+# Reddit LSA Website
 This repository is the code for my [webpage](https://www.redditlsa.com) which is inspired by [this FiveThirtyEight article](https://fivethirtyeight.com/features/dissecting-trumps-most-rabid-online-following/). The benefit of this website over the original article is the interactive map view which uses a more sophisticated algorithm than the original article. 
 ## Architecture
 All of the data is in the `redditlsa/data` folder. This contains four objects
