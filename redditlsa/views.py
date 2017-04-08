@@ -7,7 +7,8 @@ from django.conf import settings
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.template.loader import render_to_string
-from scipy.optimize import nnls
+from numpy.linalg import svd
+from scipy.optimize import nnls, differential_evolution, basinhopping
 from scipy.sparse import load_npz
 from scipy.sparse.linalg import norm as sparse_norm
 
@@ -17,7 +18,7 @@ N_SUBS = 3
 # Number of results to return on the algebra page on page-load, refinement, and search auto-completion
 N_RESULTS = 20
 
-DATA_DIR = os.path.join(settings.BASE_DIR, 'redditlsa', 'data')
+DATA_DIR = os.path.join(settings.BASE_DIR, 'data')
 
 
 # Only want to load the data once on the server
@@ -77,7 +78,7 @@ def score(A, x, y):
 
 
 # Solve the map problem using non-negative least squares
-def solve_optimal(A, y):
+def solve_nnls(A, y):
     z = nnls(A, y)[0]
     return z
 
@@ -85,6 +86,14 @@ def solve_optimal(A, y):
 # Solve the map problem using 538's method
 def solve_538(A, y):
     z = A.T.dot(y)
+    return z
+
+
+def solve_global(A, y):
+    fn = lambda x: -score(A, x, y)
+    results = differential_evolution(fn, [(0.0, 1.0)] * A.shape[1])
+    print('DE results', results)
+    z = results.x
     return z
 
 
@@ -141,7 +150,7 @@ def algebra_view(request):
 def map_view(request):
     insubs = request.GET.getlist('insubs', [])[:10]
     outsubs = request.GET.getlist('outsubs', [])[:10]
-    method = request.GET.get('method', 'optimal')
+    method = request.GET.get('method', 'nnls')
 
     # Doesn't make sense to draw a graph with less than two outer subreddits
     # It would either be a point, or some undefined thing
@@ -178,10 +187,10 @@ def map_view(request):
     for i, (sub, y) in enumerate(zip(insubs, invecs)):
         fill = 'hsl(' + str(dh * i * 360) + ', 100%, 50%)'
         if method == '538':
-            z = solve_538(A, y)
+            z = solve_nnls(A, y)
         else:
-            method = 'optimal'
-            z = solve_optimal(A, y)
+            method = 'nnls'
+            z = solve_global(A, y)
         z = z / np.sum(z)
         sim = score(A, z, y)
         sim = str(round(sim * 100, 1)) + '%'

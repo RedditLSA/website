@@ -82,10 +82,10 @@
                 <label for="method">Method</label>
                 <div class="form-group">
                     <div class="btn-group" data-toggle="buttons">
-                        <label class="btn btn-sm btn-outline-primary {% if method == 'optimal' %} active{% endif %} ">
+                        <label class="btn btn-sm btn-outline-primary {% if method == 'nnls' %} active{% endif %} ">
                             <input type="radio" name="method"
-                                   value="optimal" autocomplete="off"
-                                    {% if method == 'optimal' %} checked{% endif %}>Optimal
+                                   value="nnls" autocomplete="off"
+                                    {% if method == 'nnls' %} checked{% endif %}>NNLS
                         </label>
                         <label class="btn btn-sm btn-outline-primary {% if method == '538' %} active{% endif %} ">
                             <input type="radio" name="method"
@@ -114,7 +114,7 @@
                                 </a>
                             {% endfor %}
                             {% for x, y, fill in inpoints %}
-                                <circle cx="{{ x }}" cy="{{ y }}" style="fill:{{ fill }};" r="0.02"></circle>
+                                <circle cx="{{ x }}" cy="{{ y }}" style="fill:{{ fill }};" r="0.03"></circle>
                             {% endfor %}
                         </svg>
                     </div>

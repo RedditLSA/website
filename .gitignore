@@ -1,9 +1,6 @@
 .idea
-# Elastic Beanstalk Files
-!.elasticbeanstalk/*.cfg.yml
-!.elasticbeanstalk/*.global.yml
 db.sqlite3
 redditlsa/local_settings.py
 staticfiles
 *.pyc
-.elasticbeanstalk/
+data/
