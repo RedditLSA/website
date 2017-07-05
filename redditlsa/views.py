@@ -22,7 +22,7 @@ DATA_DIR = os.path.join(settings.BASE_DIR, 'data')
 
 
 # Only want to load the data once on the server
-# Couldn't find a good way to do this at server start-up, so stuck with this for now
+# Couldn't find a good way to do this at server start-up, so stuck with this
 def run_once(f):
     def wrapper():
         if not wrapper.has_run:

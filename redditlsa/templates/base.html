@@ -27,6 +27,15 @@
             crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.js"></script>
     {% block head %}{% endblock %}
+    <style>
+        .footer {
+            background-color: #f5f5f5;
+        }
+
+        .footer .container {
+            padding-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
 <nav class="navbar navbar-toggleable-md navbar-inverse bg-primary">
@@ -34,7 +43,9 @@
             aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <a class="navbar-brand" href="{% url 'map' %}?insubs=Feminism&insubs=politics&insubs=altright&insubs=antivax&outsubs=hillaryclinton&outsubs=SandersForPresident&outsubs=The_Donald&outsubs=GaryJohnson&outsubs=jillstein&method=optimal">Reddit LSA</a>
+    <a class="navbar-brand"
+       href="{% url 'map' %}?insubs=Feminism&insubs=politics&insubs=altright&insubs=antivax&outsubs=hillaryclinton&outsubs=SandersForPresident&outsubs=The_Donald&outsubs=GaryJohnson&outsubs=jillstein&method=optimal">Reddit
+        LSA</a>
     <div class="collapse navbar-collapse" id="navbarText">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
@@ -56,6 +67,12 @@
 <div class="container">
     {% block content %}{% endblock %}
 </div>
+
+<footer class="footer">
+    <div class="container">
+        <span class="text-muted">Inspired by work done by <a href="http://www.trevormmartin.com">Trevor Martin</a></span>
+    </div>
+</footer>
 
 </body>
 </html>

@@ -5,10 +5,10 @@ You'll need to install all the data
 ```bash
 #!/bin/sh
 mkdir -p "data"
-curl https://storage.googleapis.com/redditlsa/vectorized_data/index_to_sub.pkl > "data/index_to_sub.pkl"
-curl https://storage.googleapis.com/redditlsa/vectorized_data/sub_to_index.pkl > "data/sub_to_index.pkl"
-curl https://storage.googleapis.com/redditlsa/vectorized_data/subs_by_popularity.pkl > "data/subs_by_popularity.pkl"
-curl https://storage.googleapis.com/redditlsa/vectorized_data/X.npz > "data/X.npz"
+curl https://storage.googleapis.com/redditlsa/processed_data/index_to_sub.pkl > "data/index_to_sub.pkl"
+curl https://storage.googleapis.com/redditlsa/processed_data/sub_to_index.pkl > "data/sub_to_index.pkl"
+curl https://storage.googleapis.com/redditlsa/processed_data/subs_by_popularity.pkl > "data/subs_by_popularity.pkl"
+curl https://storage.googleapis.com/redditlsa/processed_data/X.npz > "data/X.npz"
 ```
 
 All of the data is in the `data` folder. This contains four objects
